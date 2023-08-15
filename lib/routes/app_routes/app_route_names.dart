@@ -14,7 +14,9 @@ String createNewPasswordScreen = "/createNewPasswordScreen";
 String accessAllBenefitScreen = "/accessAllBenefitScreen";
 
 // =========== PAYMENT ===========
-String paymentScreen = "/paymentScreen";
+String addPaymentMethodScreen = "/addPaymentMethodScreen";
+String paymentDetailScreen = "/paymentDetailScreen";
+String addCardScreen = "/addCardScreen";
 
 // ============= MAIN ===============
 String homeMainScreen = "/homeMainScreen";
@@ -22,3 +24,9 @@ String settingScreen = "/settingScreen";
 String accountScreen = "/accountScreen";
 String accountInfoScreen = "/accountInfoScreen";
 String languageScreen = "/languageScreen";
+String connectionLogScreen = "/connectionLogScreen";
+String connectionSettingScreen = "/connectionSettingScreen";
+String vpnProtocolScreen = "/vpnProtocolScreen";
+String reportAnIssueScreen = "/reportAnIssueScreen";
+String aboutUsScreen = "/aboutUsScreen";
+String subscriptionPlansScreen = "/subscriptionPlansScreen";

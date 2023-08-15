@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lura/controllers/app_state_controller.dart';
 import 'package:lura/routes/app_routes/app_route_names.dart';
+import 'package:lura/storage/local_storage.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,6 +13,16 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
+  final AppStateController _appStateController = Get.put(AppStateController());
+
+  checkForUser() async{
+    String token = await LocalStorage().fetchUserToken() ;
+    (token == "")?
+    Get.toNamed(onboardingScreen)
+    :
+    Get.toNamed(loginScreen);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -18,7 +30,8 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(
       Duration(seconds: 3),
         (){
-          Get.toNamed(onboardingScreen);
+          _appStateController.getGeoLocation();
+          checkForUser();
         }
     );
   }

@@ -44,75 +44,77 @@ class Screen1 extends StatelessWidget {
                   width: Get.width,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: SafeArea(
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 50,
-                        ),
-                        Image.asset(
-                          "images/LURa.png",
-                          height: 16,
-                          width: 92,
-                        ),
-                        const SizedBox(
-                          height: 60,
-                        ),
-                        Image.asset(
-                          "images/shield.png",
-                        ),
-                        const SizedBox(
-                          height: 60,
-                        ),
-                        const Text(
-                          "Cutting Edge",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 32,
-                            fontFamily: "AxiformaBold"
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 50,
                           ),
-                        ),
-                        const  Text(
-                          "Robust Encryption",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Color(0xff09B47C),
-                              fontSize: 32,
+                          Image.asset(
+                            "images/LURa.png",
+                            height: 16,
+                            width: 92,
+                          ),
+                          const SizedBox(
+                            height: 60,
+                          ),
+                          Image.asset(
+                            "images/shield.png",
+                          ),
+                          const SizedBox(
+                            height: 60,
+                          ),
+                          const Text(
+                            "Cutting Edge",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 32,
                               fontFamily: "AxiformaBold"
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        const Text(
-                          "Say goodbye to digital threats and hackers with Lura.",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16
+                          const  Text(
+                            "Robust Encryption",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Color(0xff09B47C),
+                                fontSize: 32,
+                                fontFamily: "AxiformaBold"
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        DotsIndicator(
-                          dotsCount: controller.onboardingScreens.length,
-                          position: controller.activeIndexScreens,
-                          decorator: DotsDecorator(
-                            size: const Size.square(9.0),
-                            activeSize: const Size(40.0, 9.0),
-                            activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-                            activeColor: Colors.white
+                          const SizedBox(
+                            height: 30,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
+                          const Text(
+                            "Say goodbye to digital threats and hackers with Lura.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          DotsIndicator(
+                            dotsCount: controller.onboardingScreens.length,
+                            position: controller.activeIndexScreens,
+                            decorator: DotsDecorator(
+                              size: const Size.square(9.0),
+                              activeSize: const Size(40.0, 9.0),
+                              activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                              activeColor: Colors.white
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
 
-                        OnboardingButton1.showOnboardingButton1(
-                            (){controller.updateActiveIndex(1);}
-                        , "Get Started", Iconsax.arrow_right_1)
-                      ],
+                          OnboardingButton1.showOnboardingButton1(
+                              (){controller.updateActiveIndex(1);}
+                          , "Get Started", Iconsax.arrow_right_1)
+                        ],
+                      ),
                     ),
                   ),
                 )

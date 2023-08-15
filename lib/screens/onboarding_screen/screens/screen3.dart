@@ -49,86 +49,88 @@ class Screen3 extends StatelessWidget {
                 Container(
                   height: Get.height,
                   width: Get.width,
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        "images/world.png",
-                        width: Get.width,
-                        fit: BoxFit.fill,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 30),
-                        child:  Text(
-                          "More to browse, faster and safer with Lura.",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 32,
-                              fontFamily: "AxiformaBold"
-                          ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          "images/world.png",
+                          width: Get.width,
+                          fit: BoxFit.fill,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      const Padding(
-                        padding:  EdgeInsets.symmetric(horizontal: 20),
-                        child:  Text(
-                          "Keep your online activity and data shielded from malicious cyber attacks.",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16
-                          ),
+                        const SizedBox(
+                          height: 20,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      DotsIndicator(
-                        dotsCount: controller.onboardingScreens.length,
-                        position: controller.activeIndexScreens,
-                        decorator: DotsDecorator(
-                            size: const Size.square(9.0),
-                            activeSize: const Size(40.0, 9.0),
-                            activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-                            activeColor: Colors.white
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          children: [
-                            OnboardingButton2.showOnboardingButton2((){
-                              Get.toNamed(loginScreen);
-                            }, "Login"),
-                            const SizedBox(
-                              height: 20,
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          child:  Text(
+                            "More to browse, faster and safer with Lura.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 32,
+                                fontFamily: "AxiformaBold"
                             ),
-                            OnboardingButton1.showOnboardingButton1(
-                                    (){Get.toNamed(signUpScreen);}
-                                , "Continue with Email", Icons.mail_outline)
-                          ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Text(
-                        "©2023, Lura Inc. All Rights Reserved",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10
+                        const SizedBox(
+                          height: 30,
                         ),
-                      )
-                    ],
+                        const Padding(
+                          padding:  EdgeInsets.symmetric(horizontal: 20),
+                          child:  Text(
+                            "Keep your online activity and data shielded from malicious cyber attacks.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        DotsIndicator(
+                          dotsCount: controller.onboardingScreens.length,
+                          position: controller.activeIndexScreens,
+                          decorator: DotsDecorator(
+                              size: const Size.square(9.0),
+                              activeSize: const Size(40.0, 9.0),
+                              activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                              activeColor: Colors.white
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            children: [
+                              OnboardingButton2.showOnboardingButton2((){
+                                Get.toNamed(loginScreen);
+                              }, "Login"),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              OnboardingButton1.showOnboardingButton1(
+                                      (){Get.toNamed(signUpScreen);}
+                                  , "Continue with Email", Icons.mail_outline)
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Text(
+                          "©2023, Lura Inc. All Rights Reserved",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],

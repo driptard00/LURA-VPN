@@ -4,12 +4,15 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lura/controllers/app_state_controller.dart';
 
+import '../../../../services/Theme/theme_provider.dart';
+
 class LanguageScreen extends StatelessWidget {
    LanguageScreen({super.key});
 
   final AppStateController _appStateController = Get.put(AppStateController());
 
-  @override
+
+   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppStateController>(
       builder: (controller) {
@@ -20,68 +23,83 @@ class LanguageScreen extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  height: 170,
-                  width: Get.width,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  decoration: const BoxDecoration(
-                      color: Color(0xffF4EFFF),
-                      image: DecorationImage(
-                          image: AssetImage(
-                              "images/purpleBack.png"
+                      height: 170,
+                      width: Get.width,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(
+                          color: (controller.isDarkMode.value)?
+                          null
+                              :
+                          const Color(0xffF4EFFF),
+                          gradient: (!controller.isDarkMode.value)?
+                          null
+                              :
+                          const LinearGradient(
+                              colors: [
+                                Color(0xff8159D4),
+                                Color(0xff6300B0),
+                              ],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight
+                          ),
+                          image: DecorationImage(
+                              image: AssetImage(
+                                (controller.isDarkMode.value)?
+                                "images/blackback.png"
+                                    :
+                                "images/purpleBack.png",
+                              ),
+                              fit: BoxFit.fill
                           )
-                      )
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 20,),
-                      InkWell(
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: const Icon(
-                          Iconsax.arrow_left,
-                          color: Color(0xff222823),
-                          size: 24,
-                        ),
                       ),
-                      const SizedBox(
-                        height: 10,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 20,),
+                          InkWell(
+                            onTap: (){
+                              Get.back();
+                            },
+                            child: const Icon(
+                              Iconsax.arrow_left,
+                              size: 24,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Text(
+                            "Language",
+                            style: TextStyle(
+                                fontSize: 24,
+                                fontFamily: "AxiformaMedium"
+                            ),
+                          ),
+                        ],
                       ),
-                      const Text(
-                        "Language",
-                        style: TextStyle(
-                            color: Color(0xff222823),
-                            fontSize: 24,
-                            fontFamily: "AxiformaMedium"
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                    ),
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    color: Colors.white,
                     child: ListView.separated(
                         primary: false,
                         itemBuilder: (context, index){
                           return RadioListTile(
-                            title: Text(
-                              controller.languages[index],
-                              style: const TextStyle(
-                                color: Color(0xff262833),
-                                fontSize: 14
+                              title: Text(
+                                controller.languages[index],
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                  fontFamily: "Axiforma"
+                                ),
                               ),
-                            ),
-                            controlAffinity: ListTileControlAffinity.trailing,
-                            activeColor: Color(0xff5D18EB),
-                            value: controller.languages[index],
-                            groupValue: controller.selectedLanguage,
-                            onChanged: (value){
-                              controller.updateSelectedLanguage(value);
-                            }
+                              controlAffinity: ListTileControlAffinity.trailing,
+                              activeColor: const Color(0xff5D18EB),
+                              value: controller.languages[index],
+                              groupValue: controller.selectedLanguage,
+                              onChanged: (value){
+                                controller.updateSelectedLanguage(value);
+                              }
                           );
                         },
                         separatorBuilder: (context, index){
