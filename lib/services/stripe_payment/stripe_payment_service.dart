@@ -1,21 +1,36 @@
 import 'package:dio/dio.dart';
 
+import '../../routes/api/api_routes.dart';
+import '../../storage/local_storage.dart';
+
 class StripePaymentService {
 
-  Map<String, dynamic>? paymentIntent;
+  static Future<Response?> createPaymentIntent(Map<String, dynamic> details) async{
+    try {
+      String fullUrl = "$baseUrl$createPaymentIntentRoute";
+      print("FULLURL:$fullUrl");
+      print("REGISTERDETAILS:$details");
 
-  static Future<void> createPaymentIntent(String amount) async{
-    try{
-      Map<String, dynamic> body = {
-        "amount": amount,
-        "currency":"US"
-      };
+      String token = await LocalStorage().fetchUserToken();
 
-      // var response = await Dio().post(
-      //
-      // )
-    } catch(e) {
+      var response = await Dio().post(
+        fullUrl,
+        data: details,
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer $token"
+          }
+        )
+      );
+      return response;
 
+    } on DioException catch (error) {
+      if(error.response != null){
+        return error.response;
+      }
+      throw Exception(error.response);
     }
   }
 }

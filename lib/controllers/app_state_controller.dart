@@ -1,15 +1,20 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:lura/routes/api/api_routes.dart';
+import 'package:lura/routes/app_routes/app_route_names.dart';
 import 'package:lura/screens/onboarding_screen/screens/screen1.dart';
 import 'package:lura/screens/onboarding_screen/screens/screen2.dart';
 import 'package:lura/screens/onboarding_screen/screens/screen3.dart';
 import 'package:lura/services/Theme/theme_service.dart';
 import 'package:lura/services/connection_log/connection_log_service.dart';
 import 'package:lura/services/report_an_issue/report_an_issue_service.dart';
+import 'package:lura/services/stripe_payment/stripe_payment_service.dart';
 import 'package:lura/services/subscription/subscription_services.dart';
 import 'package:lura/services/vpn_connection/vpn_connection_service.dart';
 import 'package:lura/storage/local_storage.dart';
@@ -61,10 +66,11 @@ class AppStateController extends GetxController {
       "subtitle": "Connect quickly, save power and secure your data with advanced cryptography.",
     },
   ];
-  List<Map<String, dynamic>> _connectionLogs = [];
+  List<dynamic> _connectionLogs = [];
   List<dynamic> _vpns = [];
   List<Map<String, dynamic>> _ports = [];
   Map<String, dynamic> _myLocation = {};
+  Map<String, dynamic> _paymentIntent = {};
   List<Map<String, dynamic>> _cards = [
     {
       "type": "Mastercard",
@@ -83,6 +89,13 @@ class AppStateController extends GetxController {
   ];
   List<String> _queryCategory = [
     "Missing subscription",
+    "Payment",
+    "IT support",
+    "Others",
+  ];
+  List<bool> _subPlancheck = [
+    false,
+    false
   ];
   int _activeIndexScreen = 0;
   String _selectedLanguage = "";
@@ -100,6 +113,12 @@ class AppStateController extends GetxController {
   bool _isYearlyChecked = false;
   bool _isMonthlyChecked = false;
   final _getStorage = GetStorage();
+  bool _isSubActive = false;
+  bool _isConnected = false;
+  bool _isMalwareProtected = false;
+  bool _isPhishingProtected = false;
+  bool _onDatabreachScanner = false;
+  String _selectedMethod = "GPAY";
 
   // getters
   List get onboardingScreens => _onboardingScreens;
@@ -113,7 +132,9 @@ class AppStateController extends GetxController {
   String get selectedVpnProtocol => _selectedVpnProtocol;
   List get vpns => _vpns;
   List get ports => _ports;
+  List get subPlansCheck => _subPlancheck;
   Map get myLocation => _myLocation;
+  Map get paymentIntent => _paymentIntent;
   List get cards => _cards;
   bool get isLoading => _isLoading;
   MyUser get myUser => _myUser;
@@ -123,6 +144,12 @@ class AppStateController extends GetxController {
   bool get isFreeChecked => _isFreeChecked;
   bool get isMonthlyChecked => _isMonthlyChecked;
   bool get isYearlyChecked => _isYearlyChecked;
+  bool get isSubActive => _isSubActive;
+  bool get isConnected => _isConnected;
+  bool get isMalwareProtected => _isMalwareProtected;
+  bool get isPhishingProtected => _isPhishingProtected;
+  bool get onDatabreachScanner => _onDatabreachScanner;
+  String get selectedMethod => _selectedMethod;
 
 
   // setters
@@ -139,7 +166,14 @@ class AppStateController extends GetxController {
     update();
   }
   updateSelectedVpnProtocol(value) {
-    _selectedVpnProtocol = value;
+    updateIsLoading(true);
+    Future.delayed(
+      Duration(seconds: 2,),
+      (){
+        updateIsLoading(false);
+        _selectedVpnProtocol = value;
+      }
+    );
     update();
   }
   updateQueryCategory(value) {
@@ -190,11 +224,60 @@ class AppStateController extends GetxController {
     update();
   }
   updateIsMonthlyChecked() {
-    _isMonthlyChecked = !_isMonthlyChecked;
+    _subPlancheck[0] = !_subPlancheck[0];
     update();
   }
   updateIsYearlyChecked() {
-    _isYearlyChecked = !_isYearlyChecked;
+    _subPlancheck[1] = !_subPlancheck[1];
+    update();
+  }
+  updatePaymentIntent(value) {
+    _paymentIntent = value;
+    update();
+  }
+  updateIsSubActive(value) {
+    _isSubActive = value;
+    update();
+  }
+  toggleIsConnected() {
+    _isConnected = !_isConnected;
+    update();
+  }
+  toggleIsMalwareProtected() {
+    updateIsLoading(true);
+    Future.delayed(
+      Duration(seconds: 2),
+      (){
+        updateIsLoading(false);
+        _isMalwareProtected = !_isMalwareProtected;
+      }
+    );
+    update();
+  }
+  toggleIsPhishingProtected() {
+    updateIsLoading(true);
+    Future.delayed(
+        Duration(seconds: 2),
+            (){
+          updateIsLoading(false);
+          _isPhishingProtected = !_isPhishingProtected;
+        }
+    );
+    update();
+  }
+  toggleOnDataBreachScanner() {
+    updateIsLoading(true);
+    Future.delayed(
+        Duration(seconds: 2),
+            (){
+          updateIsLoading(false);
+          _onDatabreachScanner = !_onDatabreachScanner;
+        }
+    );
+    update();
+  }
+  updateSelectedMethod(value) {
+    _selectedMethod = value;
     update();
   }
 
@@ -210,6 +293,8 @@ class AppStateController extends GetxController {
 
     if(response.statusCode == 200){
       updateIsLoading(false);
+
+      updateIsSubActive(responseData["data"]["is_subscription_active"]);
 
       _myUser = MyUser.fromMap(responseData["data"]);
 
@@ -403,12 +488,7 @@ class AppStateController extends GetxController {
       await LocalStorage().storeLocation(encodedData);
 
     } else {
-      Get.snackbar(
-          "Failed",
-          responseData["message"],
-          colorText: Colors.white,
-          backgroundColor: Colors.red
-      );
+
     }
 
     update();
@@ -425,6 +505,89 @@ class AppStateController extends GetxController {
      updateSubscriptionList(responseData["data"]);
 
     } else {
+
+    }
+
+    update();
+  }
+
+  // GET CONFIGURATION
+  Future<void> getConfiguration(dynamic serverID, portID) async{
+    var response = await VPNConnectionService.getConfigurationService(serverID, portID);
+    var responseData = response!.data;
+    print(responseData);
+
+    if(response.statusCode == 200){
+
+    } else {
+
+    }
+
+    update();
+  }
+
+  // PAYMENT INTENT
+  Future<void> createPaymentIntent(int subID) async{
+    updateIsLoading(true);
+
+    Map<String, dynamic> details = {
+      "subscription_id": subID
+    };
+    print(details);
+
+    var response = await StripePaymentService.createPaymentIntent(details);
+    var responseData = response!.data;
+    print(responseData);
+
+    if(response.statusCode == 200){
+      updateIsLoading(false);
+
+      Get.snackbar(
+          "Success",
+          responseData["message"],
+          colorText: Colors.white,
+          backgroundColor: Colors.green
+      );
+
+      updatePaymentIntent(responseData["data"]);
+
+
+      // INITIALIZE PAYMENT SHEET
+      await Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: SetupPaymentSheetParameters(
+          paymentIntentClientSecret: _paymentIntent["client_secret"],
+          style: (isDarkMode.value)? ThemeMode.dark : ThemeMode.light,
+          merchantDisplayName: "Lura",
+          googlePay: const PaymentSheetGooglePay(
+            merchantCountryCode: "US",
+            currencyCode: "US",
+            testEnv: true
+          ),
+          billingDetailsCollectionConfiguration:  const BillingDetailsCollectionConfiguration(
+            name: CollectionMode.always
+          ),
+          allowsDelayedPaymentMethods: true,
+        )
+      ).then((value) => {});
+
+      // DISPLAY PAYMENT SHEET
+      try{
+        await Stripe.instance.presentPaymentSheet().then((value) => {
+          Get.snackbar(
+            "Success",
+            "Payment Successful",
+            colorText: Colors.white,
+            backgroundColor: Colors.green
+          ),
+          Get.offAllNamed(loginScreen)
+        });
+      }catch(e) {
+        print(e);
+      }
+
+    } else {
+      updateIsLoading(false);
+
       Get.snackbar(
           "Failed",
           responseData["message"],
@@ -434,5 +597,17 @@ class AppStateController extends GetxController {
     }
 
     update();
+  }
+
+  // LOGOUT
+  Future<void> logoutAuth() async{
+    await LocalStorage().deleteUserStorage();
+    Get.snackbar(
+        "Success",
+        "Logout Successful",
+        colorText: Colors.white,
+        backgroundColor: Colors.green
+    );
+    Get.offAllNamed(loginScreen);
   }
 }

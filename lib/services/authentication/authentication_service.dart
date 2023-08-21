@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lura/routes/api/api_routes.dart';
 
 import '../../storage/local_storage.dart';
@@ -14,7 +18,7 @@ class AuthenticationServices {
       var response = await Dio().post(
           fullUrl,
           data: details
-      );
+      ).timeout(Duration(minutes: 2));
       return response;
 
     } on DioException catch (error) {
@@ -34,15 +38,26 @@ class AuthenticationServices {
 
       var response = await Dio().post(
           fullUrl,
-          data: details
-      );
+          data: details,
+      ).timeout(const Duration(seconds: 120));
       return response;
 
     } on DioException catch (error) {
       if(error.response != null){
         return error.response;
       }
-      throw Exception(error.response);
+      throw Exception("ERROR:::::${error.response}");
+    }
+    on TimeoutException {
+      Fluttertoast.showToast(
+          msg: "Connection timed out",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
     }
   }
 

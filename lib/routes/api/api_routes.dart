@@ -22,6 +22,10 @@ String getConnectionLogs = "api/account/connection-logs";
 String getServerList = "api/account/vpn/servers";
 String getPortList = "api/account/vpn/ports";
 String getGeolocationList = "api/account/vpn/geolocation";
+String getConfiguration = "api/account/vpn/configuration";
 
 // ============ SUBSCRIPTION PLANS ===========
 String getSubscriptionPlan = "api/account/subscriptions";
+
+// ============ CREATE PAYMENT INTENT ===========
+String createPaymentIntentRoute = "api/account/create-payment-intent";

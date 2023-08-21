@@ -23,14 +23,14 @@ class MyThemes {
   );
 
   static final lightTheme = ThemeData(
-      scaffoldBackgroundColor: Colors.white,
+      scaffoldBackgroundColor: Color(0xffF9F9F9),
       colorScheme: const ColorScheme.light(),
       fontFamily: "Axiforma",
-      appBarTheme: const AppBarTheme(
+      appBarTheme:  AppBarTheme(
         titleTextStyle: TextStyle(
           color: Colors.black,
         ),
-        color: Colors.white,
+        backgroundColor: Color(0xffF9F9F9),
         iconTheme:  IconThemeData(
             color: Colors.black
         ),

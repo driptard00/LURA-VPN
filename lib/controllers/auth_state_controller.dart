@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:lura/routes/app_routes/app_route_names.dart';
 import 'package:lura/services/authentication/authentication_service.dart';
 import 'package:lura/storage/local_storage.dart';
@@ -17,6 +20,9 @@ class AuthStateController extends GetxController {
   String _passwordConfirm = "";
   dynamic _otpCode = 0;
   TextEditingController _emailController = TextEditingController();
+  int _remainingSeconds = 120; // Initial countdown time in seconds
+  late Timer _timer;
+
 
   // getter
   bool get isChecked => _isChecked;
@@ -30,6 +36,8 @@ class AuthStateController extends GetxController {
   String get passwordConfirm => _passwordConfirm;
   dynamic get otpCode => _otpCode;
   TextEditingController get emailController => _emailController;
+  int get remainingSeconds => _remainingSeconds;
+  Timer get timer => _timer;
 
   // setters
   updateIsChecked() {
@@ -78,6 +86,27 @@ class AuthStateController extends GetxController {
   }
   updateEmailController() async{
     _emailController.text = await LocalStorage().fetchEmail();
+    update();
+  }
+  startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), updateTimer);
+    update();
+  }
+  updateTimer(Timer timer) {
+    if (_remainingSeconds > 0) {
+      _remainingSeconds--;
+    } else {
+      _timer.cancel();
+      onTimerFinished();
+    }
+    update();
+  }
+  onTimerFinished() {
+    resendEmailCodeRegister();
+    update();
+  }
+  updateLocalAuth() {
+
     update();
   }
 
@@ -152,7 +181,7 @@ class AuthStateController extends GetxController {
         backgroundColor: Colors.green
       );
 
-      Get.offAllNamed(accessAllBenefitScreen);
+      Get.offAllNamed(loginScreen);
 
     } else {
       updateIsLoading(false);
@@ -196,7 +225,7 @@ class AuthStateController extends GetxController {
 
       Get.offAllNamed(homeMainScreen);
 
-    } else {
+    }  else {
       updateIsLoading(false);
 
       Get.snackbar(
@@ -232,7 +261,6 @@ class AuthStateController extends GetxController {
           colorText: Colors.white,
           backgroundColor: Colors.green
       );
-
 
     } else {
       updateIsLoading(false);

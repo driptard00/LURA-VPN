@@ -17,6 +17,7 @@ import '../../screens/authentication/forgotpassword/createNewPassword.dart';
 import '../../screens/authentication/forgotpassword/forgotpasswordScreen.dart';
 import '../../screens/authentication/forgotpassword/verifyEmail.dart';
 import '../../screens/authentication/signUp/verifyEmail.dart';
+import '../../screens/main/Subscribe/subscribe_ad.dart';
 import '../../screens/main/settings/account_info/subscription plans/subscription_plans_screen.dart';
 import '../../screens/main/settings/connection_log/connection_log_screen.dart';
 import '../../screens/main/settings/language/language_screen.dart';
@@ -124,6 +125,10 @@ List<GetPage> getPage = [
   GetPage(
       name: addCardScreen,
       page: ()=> AddCardScreen()
+  ),
+  GetPage(
+      name: subscribeAdScreen,
+      page: ()=> SubcribeAdScreen()
   ),
 
 ];

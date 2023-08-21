@@ -84,4 +84,35 @@ class VPNConnectionService {
       throw Exception(error.response);
     }
   }
+
+  static Future<Response?> getConfigurationService(dynamic serverID, portID) async{
+    try {
+      String fullUrl = "$baseUrl$getConfiguration";
+      print("FULLURL:$fullUrl");
+
+      String token = await LocalStorage().fetchUserToken();
+
+      var response = await Dio().get(
+        fullUrl,
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer $token"
+          }
+        ),
+        queryParameters: {
+          "server_id": serverID,
+          "port": portID
+        }
+      );
+      return response;
+
+    } on DioException catch (error) {
+      if(error.response != null){
+        return error.response;
+      }
+      throw Exception(error.response);
+    }
+  }
 }

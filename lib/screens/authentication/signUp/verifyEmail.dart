@@ -21,6 +21,11 @@ class SignUpVerifyEmailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _authStateController.startTimer();
+    });
+
     return GetBuilder<AuthStateController>(
       builder: (controller) {
         return Scaffold(
@@ -116,8 +121,8 @@ class SignUpVerifyEmailScreen extends StatelessWidget {
                             onPressed: (){
                               Get.toNamed(loginScreen);
                             },
-                            child: const Text(
-                              " Resend OTP in 02:00",
+                            child: Text(
+                              " Resend OTP in ${controller.remainingSeconds.toString()}",
                               style: TextStyle(
                                 color: Color(0xff5D18EB),
                                 fontSize: 14,

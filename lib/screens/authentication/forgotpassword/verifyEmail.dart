@@ -21,6 +21,11 @@ class ForgotPasswordVerifyEmailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _authStateController.startTimer();
+    });
+
     return GetBuilder<AuthStateController>(
       builder: (controller) {
         return Scaffold(
@@ -116,9 +121,9 @@ class ForgotPasswordVerifyEmailScreen extends StatelessWidget {
                             onPressed: (){
                               Get.toNamed(loginScreen);
                             },
-                            child: const Text(
-                              " Resend OTP in 02:00",
-                              style: TextStyle(
+                            child: Text(
+                              " Resend OTP in ${controller.remainingSeconds.toString()}",
+                              style: const TextStyle(
                                 color: Color(0xff5D18EB),
                                 fontSize: 14,
                                 fontFamily: "AxiformaBold",

@@ -55,7 +55,7 @@ class Screen2 extends StatelessWidget {
                                 width: 92,
                               ),
                               Image.asset(
-                                "images/clock.png",
+                                "images/accelarate.gif",
                               ),
                               const Text(
                                 "Super Fast",

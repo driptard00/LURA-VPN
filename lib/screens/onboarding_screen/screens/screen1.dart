@@ -59,7 +59,9 @@ class Screen1 extends StatelessWidget {
                             height: 60,
                           ),
                           Image.asset(
-                            "images/shield.png",
+                            "images/wing.gif",
+                            height: 250,
+                            width: 250,
                           ),
                           const SizedBox(
                             height: 60,

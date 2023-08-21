@@ -30,3 +30,4 @@ String vpnProtocolScreen = "/vpnProtocolScreen";
 String reportAnIssueScreen = "/reportAnIssueScreen";
 String aboutUsScreen = "/aboutUsScreen";
 String subscriptionPlansScreen = "/subscriptionPlansScreen";
+String subscribeAdScreen = "/subscribeAdScreen";

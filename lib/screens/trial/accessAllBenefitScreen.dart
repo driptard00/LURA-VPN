@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lura/Widget/normalButton/normalButton.dart';
@@ -63,92 +64,14 @@ class AccessAllBenefitScreen extends StatelessWidget {
                     ),
                     const Text(
                       "Get access to all of Lura’s benefits and features.",
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Color(0xff6E796F),
-                          fontSize: 14
+                          fontSize: 14,
                       ),
                     ),
                     const SizedBox(
                       height: 40,
-                    ),
-                    Flexible(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                colors: [
-                                  Color(0xff76DFFF),
-                                  Color(0xffA38CEE).withOpacity(0.1),
-                                ],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter
-                            )
-                            ,
-                            borderRadius: BorderRadius.circular(17)
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Container(
-                            width: Get.width,
-                            padding: const EdgeInsets.only(left: 20, top: 10, bottom: 10),
-                            decoration: BoxDecoration(
-                                color: (_appStateController.isDarkMode.value)?
-                                Color(0xff1B1B1E)
-                                    :
-                                Colors.white,
-                                borderRadius: BorderRadius.circular(16)
-                            ),
-                            child: Center(
-                                child: Row(
-                                  children: [
-                                    const Expanded(
-                                      flex: 9,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Monthly Subscription",
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontFamily: "AxiformaBold"
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text(
-                                            "Access all of Lura’s features plus malware and anti-virus protection.",
-                                            style: TextStyle(
-                                                fontSize: 14
-                                            ),
-                                          ),
-                                          Text(
-                                            "N7.99/month",
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontFamily: "AxiformaBold"
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Checkbox(
-                                        value: false,
-                                        activeColor: const Color(0xff09B47C),
-                                        onChanged: (value){},
-
-                                      ),
-                                    )
-                                  ],
-                                )
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
                     ),
                     Flexible(
                       child: Container(
@@ -242,7 +165,7 @@ class AccessAllBenefitScreen extends StatelessWidget {
                     ListView.separated(
                         primary: false,
                         shrinkWrap: true,
-                        itemCount: controller.subscriptionPlans.length,
+                        itemCount: controller.subPlansCheck.length,
                         separatorBuilder: (context, index){
                           return const SizedBox(
                             height: 20,
@@ -294,13 +217,13 @@ class AccessAllBenefitScreen extends StatelessWidget {
                                               ),
                                               Text(
                                                 controller.subscriptionPlans[index]["description"],
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontSize: 14
                                                 ),
                                               ),
                                               Text(
-                                                controller.subscriptionPlans[index]["price"].toString(),
-                                                style: TextStyle(
+                                                "${controller.subscriptionPlans[index]["price"].toString()}/month",
+                                                style: const TextStyle(
                                                     fontSize: 14,
                                                     fontFamily: "AxiformaBold"
                                                 ),
@@ -311,12 +234,14 @@ class AccessAllBenefitScreen extends StatelessWidget {
                                         Expanded(
                                           flex: 2,
                                           child: Checkbox(
-                                            value: true,
+                                            value: controller.subPlansCheck[index],
                                             activeColor: const Color(0xff09B47C),
                                             onChanged: (value){
-
+                                              (index == 0)?
+                                              controller.updateIsMonthlyChecked()
+                                                  :
+                                              controller.updateIsYearlyChecked();
                                             },
-
                                           ),
                                         )
                                       ],
@@ -330,8 +255,36 @@ class AccessAllBenefitScreen extends StatelessWidget {
                     const SizedBox(
                       height: 70,
                     ),
+                    (controller.isLoading)?
+                    const Center(
+                      child: SpinKitThreeBounce(
+                        color: Color(0xff5D18EB),
+                      ),
+                    )
+                        :
+                    (controller.isLoading)?
+                    const Center(
+                      child: SpinKitThreeBounce(
+                        color: Color(0xff5D18EB),
+                      ),
+                    )
+                        :
                     NormalButton.showNormalButton((){
-                      CancelAnytimeBottomSheet.showCancelAnytimeBottomSheet();
+                      (controller.isFreeChecked)?
+                      CancelAnytimeBottomSheet.showCancelAnytimeBottomSheet(5)
+                      :
+                      (controller.subPlansCheck[0] && !controller.subPlansCheck[1])?
+                      CancelAnytimeBottomSheet.showCancelAnytimeBottomSheet(1)
+                          :
+                      (controller.subPlansCheck[1] && !controller.subPlansCheck[0])?
+                      CancelAnytimeBottomSheet.showCancelAnytimeBottomSheet(2)
+                          :
+                      Get.snackbar(
+                          "Failed",
+                          "Please select a plan",
+                          colorText: Colors.white,
+                          backgroundColor: Colors.red
+                      );
                     }, "Next"),
                     const SizedBox(
                       height: 20,

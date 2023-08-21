@@ -13,7 +13,8 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
 
   Stripe.publishableKey =
-  "pk_live_51M7IS9IJjSM78lZtOPcUTscbdjSCrcb215kEhUosXkQk0KJHAlW8XFv7sfcHNiyHB6EUNhvJWY1gO7wGFSi5gts800hLHASDkz";
+  "pk_test_51M7IS9IJjSM78lZtSDwzCFqSpaMdo5XXscfNCKuHcZkCacRBNSwn4lqYpqug1jmPm8xsE3vJkUiz7fDjFRf55Kt400su0ZZbkv";
+
 
   await GetStorage.init();
 

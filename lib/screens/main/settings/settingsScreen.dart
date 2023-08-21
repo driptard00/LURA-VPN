@@ -1,3 +1,4 @@
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -91,7 +92,7 @@ class SettingsScreen extends StatelessWidget {
                           const SizedBox(
                             height: 20,
                           ),
-                          const Row(
+                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                                Row(
@@ -104,7 +105,7 @@ class SettingsScreen extends StatelessWidget {
                                     width: 10,
                                   ),
                                   Text(
-                                    "User ID: 000223947w3d9hs9q",
+                                    "User ID: ${controller.myUser.connectionUserId}",
                                     style: TextStyle(
                                         fontSize: 14,
                                         fontFamily: "AxiformaBold"
@@ -112,9 +113,21 @@ class SettingsScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              Icon(
-                                Iconsax.copy,
-                                size: 24,
+                              InkWell(
+                                onTap: (){
+                                  FlutterClipboard.copy(controller.myUser.connectionUserId!).then(( value ) =>
+                                      Get.snackbar(
+                                          "Copied",
+                                          "Text copied to clipboard",
+                                          colorText: Colors.white,
+                                          backgroundColor: Colors.green
+                                      )
+                                  );
+                                },
+                                child: const Icon(
+                                  Iconsax.copy,
+                                  size: 24,
+                                ),
                               ),
                             ],
                           ),
@@ -229,7 +242,9 @@ class SettingsScreen extends StatelessWidget {
                             height: 50,
                             width: Get.width,
                             child: TextButton(
-                              onPressed: (){},
+                              onPressed: (){
+                                controller.logoutAuth();
+                              },
                               style: TextButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
